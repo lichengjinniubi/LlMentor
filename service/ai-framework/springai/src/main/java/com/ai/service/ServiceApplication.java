@@ -8,6 +8,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.LinkedList;
 
 @SpringBootApplication
 public class ServiceApplication {
@@ -17,6 +18,7 @@ public class ServiceApplication {
 	private static final String API_URL = "https://dashscope.aliyuncs.com/compatible-mode/v1/chat/completions";
 
 	public static void main(String[] args) throws IOException, InterruptedException {
+		LinkedList<Object> objects = new LinkedList<>();
 		SpringApplication.run(ServiceApplication.class, args);
 
 //		String requestBody = """
