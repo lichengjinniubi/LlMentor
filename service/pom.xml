@@ -17,6 +17,7 @@
 
 	<modules>
 		<module>ai-framework/springai</module>
+		<module>ai-framework/functioncall</module>
 	</modules>
 
 	<properties>
