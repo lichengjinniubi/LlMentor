@@ -19,6 +19,7 @@
 		<module>ai-framework/springai</module>
 		<module>ai-framework/functioncall</module>
 		<module>ai-framework/mcp</module>
+		<module>ai-framework/mcp-client</module>
 	</modules>
 
 	<properties>
@@ -49,6 +50,11 @@
 			<dependency>
 				<groupId>org.springframework.ai</groupId>
 				<artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+				<version>${spring-ai.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.ai</groupId>
+				<artifactId>spring-ai-starter-mcp-client</artifactId>
 				<version>${spring-ai.version}</version>
 			</dependency>
 			<dependency>

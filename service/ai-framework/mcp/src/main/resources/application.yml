@@ -1,7 +1,16 @@
 server:
-  port: 8004
+  # HTTPS 测试端口
+  port: 8443
+  ssl:
+    # 测试用自签名证书，生产环境应换成合法证书并通过 Nginx 做 TLS 终结
+    key-store: classpath:keystore.p12
+    key-store-password: 123456
+    key-store-type: PKCS12
+    key-alias: local-ssl
+    enabled: true
   servlet:
     encoding:
+      # 强制响应使用 UTF-8，避免浏览器把中文按 ISO-8859-1 解码后出现乱码
       charset: UTF-8
       force: true
       enabled: true
@@ -11,24 +20,35 @@ spring:
     name: mcp-weather-streamable
   ai:
     dashscope:
+      # MCP Server 只注册本地工具，不调用大模型时可以不配置 api-key。
+      # 如果后续要把 MCP 工具接入 ChatClient/Agent，才需要这里配置有效的 DashScope Key。
       #api-key: sk-ws-H.YXYXYHE.0sRn.MEUCIFCPBsrsblkTPCZqw97_u0EFNVVhIJCgCi1sXcEJuh1tAiEA_G8fF4kuopqpukChpg7oIT1YdLWAlWoK01Rv4fYahl0
       api-key: sk-ws-H.YYXREYH.HaMn.MEYCIQD9qIqcvBJpogTBFWDKAUUYwrB9jv7CsBpQD1A_Qf8GBQIhALmU1VnnKbePP4aIlMIzmurZmhyIPdoV_PSEnqhN8NSQ
     mcp:
       server:
+        # 是否启用 Spring AI MCP Server
         enabled: true
+        # 传输协议：STREAMABLE 使用单端点 HTTP；也可改为 SSE 或 STATELESS
         protocol: STREAMABLE
+        # MCP 初始化握手时返回给客户端的 Server 名称和版本
         name: streamable-mcp-server
         version: 1.0.0
+        # 服务端接口类型：SYNC 为同步，ASYNC 为异步
         type: SYNC
+        # 服务说明，客户端初始化后会拿到这段 instructions
         instructions: "这个服务是用来查询城市天气的。"
         capabilities:
+          # 只开启工具能力，其余能力按需关闭
           tool: true
           resource: false
           prompt: false
           completion: false
+        # 这些开关控制 Server 在对应资源变化时是否向客户端推送通知
         resource-change-notification: true
         tool-change-notification: true
         prompt-change-notification: true
         streamable-http:
+          # Streamable HTTP 的唯一端点
           mcp-endpoint: /api/mcp
+          # 长连接心跳间隔
           keep-alive-interval: 30s

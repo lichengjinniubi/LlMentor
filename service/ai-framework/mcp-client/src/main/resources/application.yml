@@ -1,0 +1,10 @@
+server:
+  # mcp-client 自己的 REST 服务端口，和 mcp server 的 8443 区分开
+  port: 8005
+
+spring:
+  application:
+    name: mcp-weather-client
+
+# HTTPS MCP Client 在 McpClientConfiguration 中手动构建，
+# 因为自签名证书需要自定义 SSLContext，不适合使用自动配置。
