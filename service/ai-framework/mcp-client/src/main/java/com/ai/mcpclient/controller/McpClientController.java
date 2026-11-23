@@ -1,6 +1,6 @@
 package com.ai.mcpclient.controller;
 
-import io.modelcontextprotocol.client.McpSyncClient;
+import com.ai.mcpclient.service.McpClientService;
 import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,21 +8,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/client")
 public class McpClientController {
 
-	private final McpSyncClient mcpSyncClient;
+	private final McpClientService mcpClientService;
 
-	public McpClientController(McpSyncClient mcpSyncClient) {
-		this.mcpSyncClient = mcpSyncClient;
+	public McpClientController(McpClientService mcpClientService) {
+		this.mcpClientService = mcpClientService;
 	}
 
 	@GetMapping("/servers")
 	public String servers() {
-		return mcpSyncClient.getClientInfo().name() + " -> " + mcpSyncClient.getServerInfo().name();
+		return mcpClientService.serverDescription();
+	}
+
+	@GetMapping("/tools")
+	public List<String> tools() {
+		return mcpClientService.listWeatherTools();
 	}
 
 	@GetMapping("/weather")
@@ -38,12 +44,7 @@ public class McpClientController {
 				"street", street);
 		Map<String, Object> arguments = Map.of("request", request);
 
-		McpSchema.CallToolRequest callToolRequest = McpSchema.CallToolRequest.builder()
-				.name("getWeather")
-				.arguments(arguments)
-				.build();
-
-		McpSchema.CallToolResult result = mcpSyncClient.callTool(callToolRequest);
+		McpSchema.CallToolResult result = mcpClientService.callTool("weatherResponmse", arguments);
 
 		return result.content().stream()
 				.filter(TextContent.class::isInstance)
@@ -64,12 +65,7 @@ public class McpClientController {
 				"street", "望京");
 		Map<String, Object> arguments = Map.of("request", request);
 
-		McpSchema.CallToolRequest callToolRequest = McpSchema.CallToolRequest.builder()
-				.name("queryWeatherByCityAndDate")
-				.arguments(arguments)
-				.build();
-
-		McpSchema.CallToolResult result = mcpSyncClient.callTool(callToolRequest);
+		McpSchema.CallToolResult result = mcpClientService.callTool("weatherResponmse", arguments);
 
 		return result.content().stream()
 				.filter(TextContent.class::isInstance)

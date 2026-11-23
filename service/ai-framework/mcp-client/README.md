@@ -35,6 +35,8 @@ http://127.0.0.1:8005
 
 ## 接口
 
+当前客户端只读取 MCP Server 中名称以 `weather` 开头的工具。
+
 ### 查看当前 MCP 连接
 
 ```bash
@@ -45,6 +47,18 @@ curl http://127.0.0.1:8005/client/servers
 
 ```text
 streamable-client -> streamable-mcp-server
+```
+
+### 查看已过滤的工具列表
+
+```bash
+curl http://127.0.0.1:8005/client/tools
+```
+
+返回示例：
+
+```json
+["weatherResponmse"]
 ```
 
 ### 调用 queryWeatherByCityAndDate

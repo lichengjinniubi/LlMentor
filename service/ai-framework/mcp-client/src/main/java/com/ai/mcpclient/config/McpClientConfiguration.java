@@ -4,8 +4,10 @@ import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
 import io.modelcontextprotocol.spec.McpSchema;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
@@ -61,6 +63,15 @@ public class McpClientConfiguration {
 
 		client.initialize();
 		return client;
+	}
+
+	@Bean
+	@Primary
+	public SyncMcpToolCallbackProvider weatherMcpToolCallbackProvider(McpSyncClient streamableMcpClient) {
+		return SyncMcpToolCallbackProvider.builder()
+				.mcpClients(streamableMcpClient)
+				.toolFilter((connectionInfo, tool) -> tool.name().startsWith("weather"))
+				.build();
 	}
 
 }
